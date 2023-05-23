@@ -1,0 +1,2 @@
+#define _GtkMountOperationHandler GtkMountOperationPrivate
+#define _GTK_MOUNT_OPERATION_HANDLER

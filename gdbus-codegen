@@ -1,0 +1,4 @@
+#! /bin/sh
+
+cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.c ./gtk
+cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.h ./gtk

@@ -1,0 +1,279 @@
+diff --git a/gtk/a11y/gtkcellaccessible.h b/gtk/a11y/gtkcellaccessible.h
+index 1195a38..96721f4 100755
+--- a/gtk/a11y/gtkcellaccessible.h
++++ b/gtk/a11y/gtkcellaccessible.h
+@@ -40,14 +40,14 @@ typedef struct _GtkCellAccessiblePrivate GtkCellAccessiblePrivate;
+ 
+ struct _GtkCellAccessible
+ {
+-  GtkAccessible parent;
++  int parent;
+ 
+   GtkCellAccessiblePrivate *priv;
+ };
+ 
+ struct _GtkCellAccessibleClass
+ {
+-  GtkAccessibleClass parent_class;
++  int parent_class;
+   void (*update_cache) (GtkCellAccessible *cell,
+                         gboolean           emit_signal);
+ };
+diff --git a/gtk/a11y/gtkcontainercellaccessible.c b/gtk/a11y/gtkcontainercellaccessible.c
+index a40446f..71e6328 100755
+--- a/gtk/a11y/gtkcontainercellaccessible.c
++++ b/gtk/a11y/gtkcontainercellaccessible.c
+@@ -89,8 +89,6 @@ gtk_container_cell_widget_set (GtkAccessible *accessible)
+ 
+   for (l = container->priv->children; l; l = l->next)
+     gtk_accessible_set_widget (l->data, gtk_accessible_get_widget (accessible));
+-
+-  GTK_ACCESSIBLE_CLASS (gtk_container_cell_accessible_parent_class)->widget_set (accessible);
+ }
+ 
+ static void
+@@ -101,15 +99,13 @@ gtk_container_cell_widget_unset (GtkAccessible *accessible)
+ 
+   for (l = container->priv->children; l; l = l->next)
+     gtk_accessible_set_widget (l->data, NULL);
+-
+-  GTK_ACCESSIBLE_CLASS (gtk_container_cell_accessible_parent_class)->widget_unset (accessible);
+ }
+ 
+ static void
+ gtk_container_cell_accessible_class_init (GtkContainerCellAccessibleClass *klass)
+ {
+   GtkCellAccessibleClass *cell_class = GTK_CELL_ACCESSIBLE_CLASS (klass);
+-  GtkAccessibleClass *accessible_class = GTK_ACCESSIBLE_CLASS (klass);
++  int *accessible_class = GTK_ACCESSIBLE_CLASS (klass);
+   AtkObjectClass *class = ATK_OBJECT_CLASS (klass);
+   GObjectClass *g_object_class = G_OBJECT_CLASS (klass);
+ 
+@@ -118,9 +114,6 @@ gtk_container_cell_accessible_class_init (GtkContainerCellAccessibleClass *klass
+   class->get_n_children = gtk_container_cell_accessible_get_n_children;
+   class->ref_child = gtk_container_cell_accessible_ref_child;
+ 
+-  accessible_class->widget_set = gtk_container_cell_widget_set;
+-  accessible_class->widget_unset = gtk_container_cell_widget_unset;
+-
+   cell_class->update_cache = gtk_container_cell_accessible_update_cache;
+ }
+ 
+diff --git a/gtk/a11y/gtkrangeaccessible.c b/gtk/a11y/gtkrangeaccessible.c
+index 93cfb62..dc0ce8a 100755
+--- a/gtk/a11y/gtkrangeaccessible.c
++++ b/gtk/a11y/gtkrangeaccessible.c
+@@ -108,9 +108,6 @@ gtk_range_accessible_class_init (GtkRangeAccessibleClass *klass)
+ 
+   class->initialize = gtk_range_accessible_initialize;
+ 
+-  accessible_class->widget_set = gtk_range_accessible_widget_set;
+-  accessible_class->widget_unset = gtk_range_accessible_widget_unset;
+-
+   widget_class->notify_gtk = gtk_range_accessible_notify_gtk;
+ }
+ 
+diff --git a/gtk/a11y/gtkspinbuttonaccessible.c b/gtk/a11y/gtkspinbuttonaccessible.c
+index 8eea704..3a4f37c 100755
+--- a/gtk/a11y/gtkspinbuttonaccessible.c
++++ b/gtk/a11y/gtkspinbuttonaccessible.c
+@@ -108,9 +108,6 @@ gtk_spin_button_accessible_class_init (GtkSpinButtonAccessibleClass *klass)
+ 
+   class->initialize = gtk_spin_button_accessible_initialize;
+ 
+-  accessible_class->widget_set = gtk_spin_button_accessible_widget_set;
+-  accessible_class->widget_unset = gtk_spin_button_accessible_widget_unset;
+-
+   widget_class->notify_gtk = gtk_spin_button_accessible_notify_gtk;
+ }
+ 
+diff --git a/gtk/a11y/gtktextviewaccessible.c b/gtk/a11y/gtktextviewaccessible.c
+index f490d30..6115161 100755
+--- a/gtk/a11y/gtktextviewaccessible.c
++++ b/gtk/a11y/gtktextviewaccessible.c
+@@ -169,10 +169,6 @@ gtk_text_view_accessible_class_init (GtkTextViewAccessibleClass *klass)
+   AtkObjectClass  *class = ATK_OBJECT_CLASS (klass);
+   GtkAccessibleClass *accessible_class = GTK_ACCESSIBLE_CLASS (klass);
+   GtkWidgetAccessibleClass *widget_class = (GtkWidgetAccessibleClass*)klass;
+-
+-  accessible_class->widget_set = gtk_text_view_accessible_widget_set;
+-  accessible_class->widget_unset = gtk_text_view_accessible_widget_unset;
+-
+   class->ref_state_set = gtk_text_view_accessible_ref_state_set;
+   class->initialize = gtk_text_view_accessible_initialize;
+ 
+diff --git a/gtk/a11y/gtktreeviewaccessible.c b/gtk/a11y/gtktreeviewaccessible.c
+index c2b7e8a..609664f 100755
+--- a/gtk/a11y/gtktreeviewaccessible.c
++++ b/gtk/a11y/gtktreeviewaccessible.c
+@@ -235,8 +235,6 @@ gtk_tree_view_accessible_widget_unset (GtkAccessible *gtkaccessible)
+   GtkTreeViewAccessible *accessible = GTK_TREE_VIEW_ACCESSIBLE (gtkaccessible);
+ 
+   g_hash_table_remove_all (accessible->priv->cell_infos);
+-
+-  GTK_ACCESSIBLE_CLASS (gtk_tree_view_accessible_parent_class)->widget_unset (gtkaccessible);
+ }
+ 
+ static gint
+@@ -515,8 +513,6 @@ gtk_tree_view_accessible_class_init (GtkTreeViewAccessibleClass *klass)
+ 
+   widget_class->notify_gtk = gtk_tree_view_accessible_notify_gtk;
+ 
+-  accessible_class->widget_unset = gtk_tree_view_accessible_widget_unset;
+-
+   /* The children of a GtkTreeView are the buttons at the top of the columns
+    * we do not represent these as children so we do not want to report
+    * children added or deleted when these changed.
+diff --git a/gtk/a11y/gtkwidgetaccessible.h b/gtk/a11y/gtkwidgetaccessible.h
+index 37fd45b..9d95666 100755
+--- a/gtk/a11y/gtkwidgetaccessible.h
++++ b/gtk/a11y/gtkwidgetaccessible.h
+@@ -39,14 +39,14 @@ typedef struct _GtkWidgetAccessiblePrivate GtkWidgetAccessiblePrivate;
+ 
+ struct _GtkWidgetAccessible
+ {
+-  GtkAccessible parent;
++  int parent;
+ 
+   GtkWidgetAccessiblePrivate *priv;
+ };
+ 
+ struct _GtkWidgetAccessibleClass
+ {
+-  GtkAccessibleClass parent_class;
++  int parent_class;
+ 
+   /*
+    * Signal handler for notify signal on GTK widget
+diff --git a/gtk/gtk.h b/gtk/gtk.h
+index c08454c..fea6413 100755
+--- a/gtk/gtk.h
++++ b/gtk/gtk.h
+@@ -27,12 +27,20 @@
+ 
+ #define __GTK_H_INSIDE__
+ 
++//#define GtkAccessible int
++#define GTK_ACCESSIBLE
++#define GTK_IS_ACCESSIBLE
++#define GTK_ACCESSIBLE_CLASS
++typedef struct _GtkAccessible GtkAccessible;
++typedef struct _GtkAccessibleClass   GtkAccessibleClass;
++#define GTK_TYPE_ACCESSIBLE (gtk_accessible_get_type ())
++
+ #include <gdk/gdk.h>
+ #include <gtk/gtkaboutdialog.h>
+ #include <gtk/gtkaccelgroup.h>
+ #include <gtk/gtkaccellabel.h>
+ #include <gtk/gtkaccelmap.h>
+-#include <gtk/gtkaccessible.h>
++//#include <gtk/gtkaccessible.h>
+ #include <gtk/gtkactionable.h>
+ #include <gtk/gtkactionbar.h>
+ #include <gtk/gtkadjustment.h>
+diff --git a/meson.build b/meson.build
+index 121f38b..b14a454 100755
+--- a/meson.build
++++ b/meson.build
+@@ -285,37 +285,8 @@ if cc.get_id() == 'msvc'
+ elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
+   test_cflags = [
+     '-fno-strict-aliasing',
+-    '-Wpointer-arith',
+-    '-Wimplicit-function-declaration',
+-    '-Wformat=2',
+-    '-Wformat-security',
+-    '-Wnested-externs',
+-    '-Wold-style-definition',
+-    '-Wundef',
+-    '-Wunused',
+-    '-Wcast-align',
+-    '-Wmissing-noreturn',
+-    '-Wmissing-format-attribute',
+-    '-Wmissing-include-dirs',
+-    '-Wlogical-op',
+-    '-Wignored-qualifiers',
+-    '-Wno-discarded-qualifiers',
+-    '-Werror=implicit',
+-    '-Werror=nonnull',
+-    '-Werror=init-self',
+-    '-Werror=main',
+-    '-Werror=missing-braces',
+-    '-Werror=sequence-point',
+-    '-Werror=return-type',
+-    '-Werror=trigraphs',
+-    '-Werror=array-bounds',
+-    '-Werror=write-strings',
+-    '-Werror=address',
+-    '-Werror=int-to-pointer-cast',
+-    '-Werror=pointer-to-int-cast',
+-    '-Werror=empty-body',
+-    '-Werror=write-strings',
+-  ]
++    '-w'
++    ]
+ else
+   test_cflags = []
+ endif
+diff --git a/meson_options.txt b/meson_options.txt
+index 134fb41..bd6781d 100755
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,17 +1,17 @@
+ # GDK backends
+ option('x11_backend', type: 'boolean', value: true,
+   description : 'Enable the X11 gdk backend (only when building on Unix)')
+-option('wayland_backend', type: 'boolean', value: true,
++option('wayland_backend', type: 'boolean', value: false,
+   description : 'Enable the wayland gdk backend (only when building on Unix except for macOS)')
+ option('broadway_backend', type: 'boolean', value: false,
+   description : 'Enable the broadway (HTML5) gdk backend')
+-option('win32_backend', type: 'boolean', value: true,
++option('win32_backend', type: 'boolean', value: false,
+   description : 'Enable the Windows gdk backend (only when building on Windows)')
+-option('quartz_backend', type: 'boolean', value: true,
++option('quartz_backend', type: 'boolean', value: false,
+   description : 'Enable the macOS gdk backend (only when building on macOS)')
+ 
+ # Optional dependencies
+-option('xinerama', type: 'combo', choices : ['yes', 'no', 'auto'], value : 'auto',
++option('xinerama', type: 'combo', choices : ['yes', 'no', 'auto'], value : 'no',
+   description : 'Enable support for the Xinerama extension')
+ option('cloudproviders', type: 'boolean', value: false,
+   description : 'Enable the cloudproviders support')
+@@ -23,7 +23,7 @@ option('tracker3', type: 'boolean', value: false,
+ # Print backends
+ option('print_backends', type : 'string', value : 'auto',
+   description : 'Build the specified print backends (comma-separated list, any of "cups,file,lpr,papi,test" or "auto")')
+-option('colord', type: 'combo', choices : ['yes', 'no', 'auto'], value : 'auto',
++option('colord', type: 'combo', choices : ['yes', 'no', 'auto'], value : 'no',
+   description : 'Build colord support for the CUPS printing backend')
+ 
+ # Documentation and introspection
+@@ -31,15 +31,15 @@ option('gtk_doc', type: 'boolean', value: 'false',
+   description : 'Build API reference with gtk-doc')
+ option('man', type: 'boolean', value: 'false',
+   description : 'Build man pages for installed tools')
+-option('introspection', type: 'boolean', value: 'true',
++option('introspection', type: 'boolean', value: 'false',
+   description : 'Build introspection data (requires gobject-introspection)')
+ 
+ # Demos and binaries
+-option('demos', type: 'boolean', value: 'true',
++option('demos', type: 'boolean', value: 'false',
+   description : 'Build demo programs')
+-option('examples', type: 'boolean', value: 'true',
++option('examples', type: 'boolean', value: 'false',
+   description : 'Build examples')
+-option('tests', type: 'boolean', value: 'true',
++option('tests', type: 'boolean', value: 'false',
+   description : 'Build tests')
+ option('installed_tests', type: 'boolean', value: 'false',
+   description : 'enable installed tests')
+@@ -49,5 +49,5 @@ option('builtin_immodules', type: 'string',
+        value: '', description: 'Build specified immodules into GTK so/DLL (comma-separated list), "all", "none" or "backend"')
+ 
+ # Recommended dependencies
+-option('atk_bridge', type: 'boolean', value: true,
++option('atk_bridge', type: 'boolean', value: false,
+   description : 'Enable atk-bridge support')
