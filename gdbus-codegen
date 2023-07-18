@@ -1,6 +1,6 @@
 #! /bin/sh
 
-cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.c .
-cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.h .
-cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.c ./gtk
-cp /etc/portage/patches/x11-libs/gtk+/gtkdbusgenerated.h ./gtk
+cp /etc/portage/patches/x11-libs/gtk+:3/gtkdbusgenerated.c .
+cp /etc/portage/patches/x11-libs/gtk+:3/gtkdbusgenerated.h .
+cp /etc/portage/patches/x11-libs/gtk+:3/gtkdbusgenerated.c ./gtk
+cp /etc/portage/patches/x11-libs/gtk+:3/gtkdbusgenerated.h ./gtk
