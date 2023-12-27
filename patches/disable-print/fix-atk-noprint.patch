@@ -1,0 +1,63 @@
+diff -Naru gtkprintunixdialog.c.bak gtkprintunixdialog.c
+--- a/gtk/gtkprintunixdialog.c        2023-12-27 01:49:46.804390759 +0200
++++ b/gtk/gtkprintunixdialog.c        2023-12-27 01:53:21.571183784 +0200
+@@ -393,6 +393,7 @@
+ static void
+ gtk_print_unix_dialog_class_init (GtkPrintUnixDialogClass *class)
+ {
++  return;
+   GObjectClass *object_class;
+   GtkWidgetClass *widget_class;
+
+@@ -816,6 +817,7 @@
+ static void
+ gtk_print_unix_dialog_constructed (GObject *object)
+ {
++  return;
+   gboolean use_header;
+
+   G_OBJECT_CLASS (gtk_print_unix_dialog_parent_class)->constructed (object);
+@@ -1662,6 +1664,7 @@
+ static void
+ update_dialog_from_capabilities (GtkPrintUnixDialog *dialog)
+ {
++  return;
+   GtkPrintCapabilities caps;
+   GtkPrintUnixDialogPrivate *priv = dialog->priv;
+   gboolean can_collate;
+@@ -3416,6 +3416,7 @@
+ gtk_print_unix_dialog_new (const gchar *title,
+                            GtkWindow   *parent)
+ {
++  return NULL;
+   GtkWidget *result;
+
+   result = g_object_new (GTK_TYPE_PRINT_UNIX_DIALOG,
+@@ -3758,6 +3758,7 @@
+                                       GtkWidget          *child,
+                                       GtkWidget          *tab_label)
+ {
++  return;
+   gtk_notebook_insert_page (GTK_NOTEBOOK (dialog->priv->notebook),
+                             child, tab_label, 2);
+   gtk_widget_show (child);
+@@ -3781,6 +3781,7 @@
+ gtk_print_unix_dialog_set_manual_capabilities (GtkPrintUnixDialog   *dialog,
+                                                GtkPrintCapabilities  capabilities)
+ {
++  return;
+   GtkPrintUnixDialogPrivate *priv = dialog->priv;
+
+   if (priv->manual_capabilities != capabilities)
+
+diff -Naru gtkprintoperation-unix.c.bak gtkprintoperation-unix.c
+--- a/gtk/gtkprintoperation-unix.c    2023-12-27 02:12:44.743814874 +0200
++++ b/gtk/gtkprintoperation-unix.c    2023-12-27 02:13:36.943035417 +0200
+@@ -435,6 +435,7 @@
+ get_print_dialog (GtkPrintOperation *op,
+                   GtkWindow         *parent)
+ {
++  return NULL;
+   GtkPrintOperationPrivate *priv = op->priv;
+   GtkWidget *pd, *label;
+   const gchar *custom_tab_label;

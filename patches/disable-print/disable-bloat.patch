@@ -1,0 +1,165 @@
+diff --git a/demos/gtk-demo/meson.build b/demos/gtk-demo/meson.build
+index 252da16..f861a90 100644
+--- a/demos/gtk-demo/meson.build
++++ b/demos/gtk-demo/meson.build
+@@ -119,7 +119,7 @@ gtkdemo = executable(
+   gtkdemo_resources,
+   dependencies: gtkdemo_deps,
+   include_directories : confinc,
+-  install: true
++  install: false
+ )
+ 
+ gtkapplicationdemo = executable(
+@@ -129,7 +129,7 @@ gtkapplicationdemo = executable(
+   gtkdemo_resources,
+   dependencies: gtkdemo_deps,
+   include_directories : confinc,
+-  install: true
++  install: false
+ )
+ 
+ gtk_settings_schemas = [
+diff --git a/demos/icon-browser/meson.build b/demos/icon-browser/meson.build
+index f241a5a..c7be8ef 100644
+--- a/demos/icon-browser/meson.build
++++ b/demos/icon-browser/meson.build
+@@ -17,7 +17,7 @@ iconbrowser = executable(
+   iconbrowser_resources,
+   dependencies: libgtk_dep,
+   include_directories : confinc,
+-  install: true
++  install: false
+ )
+ 
+ # desktop file
+diff --git a/demos/widget-factory/meson.build b/demos/widget-factory/meson.build
+index 2a1b980..f4ada39 100644
+--- a/demos/widget-factory/meson.build
++++ b/demos/widget-factory/meson.build
+@@ -22,7 +22,7 @@ widget_factory = executable(
+   widgetfactory_resources,
+   dependencies: libgtk_dep,
+   include_directories : confinc,
+-  install: true
++  install: false
+ )
+ 
+ # desktop file
+diff --git a/docs/reference/gdk/meson.build b/docs/reference/gdk/meson.build
+index 96a993e..297c3de 100644
+--- a/docs/reference/gdk/meson.build
++++ b/docs/reference/gdk/meson.build
+@@ -176,5 +176,5 @@ if get_option('gtk_doc')
+                    '--extra-dir=@0@'.format(cairo_docpath),
+                  ],
+                  html_assets: images,
+-                 install: true)
++                 install: false)
+ endif
+diff --git a/docs/reference/gtk/meson.build b/docs/reference/gtk/meson.build
+index 6e84d9f..a11b905 100644
+--- a/docs/reference/gtk/meson.build
++++ b/docs/reference/gtk/meson.build
+@@ -480,7 +480,7 @@ if get_option('gtk_doc')
+                  content_files: content_files,
+                  expand_content_files: expand_content_files,
+                  html_assets: images,
+-                 install: true)
++                 install: false)
+ endif
+ 
+ xsltproc = find_program('xsltproc', required: false)
+@@ -532,7 +532,7 @@ if get_option('man') and xsltproc.found()
+                     'http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl',
+                     '@INPUT@',
+                   ],
+-                  install: true,
++                  install: false,
+                   install_dir: join_paths(get_option('mandir'), 'man@0@'.format(man_section)))
+   endforeach
+ endif
+diff --git a/docs/reference/libgail-util/meson.build b/docs/reference/libgail-util/meson.build
+index ce32d9f..4da860e 100644
+--- a/docs/reference/libgail-util/meson.build
++++ b/docs/reference/libgail-util/meson.build
+@@ -17,5 +17,5 @@ if get_option('gtk_doc')
+                    '--extra-dir=@0@'.format(join_paths(glib_docpath, 'gio')),
+                    '--extra-dir=../gtk',
+                  ],
+-                 install: true)
++                 install: false)
+ endif
+
+diff --git a/gtk/meson.build b/gtk/meson.build
+index 944c091..0312609 100644
+--- a/gtk/meson.build
++++ b/gtk/meson.build
+@@ -1043,7 +1043,7 @@ foreach lang : [ 'de', 'fr', 'es', 'zh' ]
+     resxml,
+     source_dir: 'emoji',
+     gresource_bundle: true,
+-    install: true,
++    install: false,
+     install_dir: join_paths(gtk_datadir, 'gtk-3.0', 'emoji'),
+   )
+ endforeach
+@@ -1078,7 +1078,7 @@ gtk_query_settings = executable(
+   'gtk-query-settings.c',
+   c_args: gtk_cargs,
+   dependencies: libgtk_dep,
+-  install: true
++  install: false
+ )
+ gtk_tools += gtk_query_settings
+ 
+@@ -1087,7 +1087,7 @@ gtk_builder_tool = executable(
+   'gtk-builder-tool.c',
+   c_args: gtk_cargs,
+   dependencies: libgtk_dep,
+-  install: true
++  install: false
+ )
+ gtk_tools += gtk_builder_tool
+ 
+@@ -1128,7 +1128,7 @@ gtk_encode_symbolic_svg = executable(
+   'encodesymbolic.c',
+   c_args: gtk_cargs,
+   dependencies: libgtk_dep,
+-  install: true
++  install: false
+ )
+ gtk_tools += gtk_encode_symbolic_svg
+ 
+@@ -1137,7 +1137,7 @@ gtk_launch = executable(
+   'gtk-launch.c',
+   c_args: gtk_cargs,
+   dependencies: libgtk_dep,
+-  install: true
++  install: false
+ )
+ gtk_tools += gtk_launch
+ 
+diff --git a/libgail-util/meson.build b/libgail-util/meson.build
+index 940ea40..51621d6 100644
+--- a/libgail-util/meson.build
++++ b/libgail-util/meson.build
+@@ -29,4 +29,4 @@ libgailutil = library('gailutil-3',
+                         '-DGTK_DISABLE_DEPRECATED',
+                       ] + common_cflags,
+                       link_args: gailutil_link_args,
+-                      install: true)
++                      install: false)
+diff --git a/testsuite/a11y/state/meson.build b/testsuite/a11y/state/meson.build
+index aa18a84..2bf969d 100644
+--- a/testsuite/a11y/state/meson.build
++++ b/testsuite/a11y/state/meson.build
+@@ -30,7 +30,7 @@ if get_option('installed_tests')
+     configure_file(input: '@0@.in'.format(t),
+                    output: t,
+                    configuration: test_cdata,
+-                   install: true,
++                   install: false,
+                    install_dir: installed_test_datadir)
+   endforeach
+ 
